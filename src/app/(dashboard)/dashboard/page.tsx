@@ -65,8 +65,8 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Overview sistem monitoring pengangkutan sampah
+          <p className="text-sm text-[10px] text-gray-500 mt-1 max-w-2xl">
+            Sistem Monitoring Proses Distribusi Armada Heterogen Pengangkut Sampah di Kota Tasikmalaya Berbasis Internet of Things (IoT)
           </p>
         </div>
         <div className="flex items-center gap-2 text-xs text-gray-400">

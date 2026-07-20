@@ -4,10 +4,10 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import {
   LayoutDashboard,
   Truck,
-  Users,
   MapPin,
   Navigation,
   FileText,
@@ -15,8 +15,6 @@ import {
   User,
   LogOut,
   ChevronDown,
-  ChevronLeft,
-  Trash2,
   Menu,
   X,
 } from 'lucide-react'
@@ -34,7 +32,7 @@ const menuItems: MenuItem[] = [
   { label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
   {
     label: 'Master Data',
-    icon: Trash2,
+    icon: Truck,
     children: [
       { label: 'Armada', href: '/master-armada' },
       { label: 'Sopir', href: '/master-sopir' },
@@ -70,9 +68,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   const sidebarContent = (
     <div className="flex flex-col h-full">
       <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-100">
-        <div className="w-10 h-10 rounded-xl bg-green-600 flex items-center justify-center">
-          <Trash2 className="w-5 h-5 text-white" />
-        </div>
+        <Image src="/scwms-icon.png" alt="SCWMS" width={40} height={40} className="rounded-xl" />
         <div>
           <h1 className="text-sm font-bold text-gray-900">SCWMS</h1>
           <p className="text-xs text-gray-500">Waste Monitoring</p>

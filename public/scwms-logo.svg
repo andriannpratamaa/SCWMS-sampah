@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" fill="none">
+  <rect width="200" height="60" rx="8" fill="white"/>
+  <rect x="8" y="8" width="44" height="44" rx="10" fill="#16A34A"/>
+  <path d="M22 18h16v4H22zM20 24h20v18a2 2 0 01-2 2H22a2 2 0 01-2-2V24z" fill="white"/>
+  <path d="M26 26v12M30 26v12M34 26v12" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/>
+  <text x="62" y="32" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#111827">SCWMS</text>
+  <text x="62" y="46" font-family="system-ui,sans-serif" font-size="10" fill="#6B7280">Waste Monitoring System</text>
+</svg>
