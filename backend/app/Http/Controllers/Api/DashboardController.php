@@ -39,7 +39,7 @@ class DashboardController extends Controller
 
     public function pengangkutanPerBulan()
     {
-        $data = Monitoring::selectRaw("DATE_FORMAT(tanggal, '%Y-%m') as bulan, COUNT(*) as jumlah")
+        $data = Monitoring::selectRaw("strftime('%Y-%m', tanggal) as bulan, COUNT(*) as jumlah")
             ->whereYear('tanggal', now()->year)
             ->groupBy('bulan')
             ->orderBy('bulan')

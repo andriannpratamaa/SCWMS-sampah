@@ -76,12 +76,3 @@ class ArmadaController extends Controller
         return response()->json(['success' => true, 'message' => 'Armada berhasil dihapus.']);
     }
 }
-```
-
-Wait, the DashboardController has a bug - `$armada` is not defined in the `update` method. Let me check the user's provided code... Actually, looking at the user's provided code for DashboardController, it doesn't have update/destroy methods. The user only provided the code as shown. Let me re-read the user's request.
-
-The user provided the exact code for each file. I should write them exactly as provided. Let me write all 7 files.</think>
-
-<｜DSML｜tool_calls>
-<｜DSML｜invoke name="write">
-<｜DSML｜parameter name="filePath" string="true">C:\ELMECH2026\SCWMS\backend\app\Http\Controllers\Api\ArmadaController.php

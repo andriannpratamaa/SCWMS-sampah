@@ -68,7 +68,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   const sidebarContent = (
     <div className="flex flex-col h-full">
       <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-100">
-        <Image src="/scwms-icon.png" alt="SCWMS" width={40} height={40} className="rounded-xl" />
+        <Image src="/scwms-icon1.png" alt="SCWMS" width={40} height={40} className="rounded-xl" />
         <div>
           <h1 className="text-sm font-bold text-gray-900">SCWMS</h1>
           <p className="text-xs text-gray-500">Waste Monitoring</p>

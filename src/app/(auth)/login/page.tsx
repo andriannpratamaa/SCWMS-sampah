@@ -98,22 +98,22 @@ export default function LoginPage() {
         transition={{ duration: 0.6 }}
         className="w-full max-w-md px-4 relative z-10"
       >
-        <div className="backdrop-blur-2xl bg-white/5 rounded-3xl border border-white/10 p-10 shadow-2xl">
+        <div className="backdrop-blur-2xl bg-white/5 rounded-3xl border border-white/10 p-8 shadow-2xl">
           {/* Logo & Brand */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-5">
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.15, type: 'spring', stiffness: 200 }}
-              className="flex justify-center mb-5"
+              className="flex justify-center mb-3"
             >
               <div className="relative">
                 <div className="absolute inset-0 bg-green-500/20 blur-xl rounded-full" />
                 <Image
-                  src="/scwms-icon.png"
+                  src="/scwms-icon1.png"
                   alt="SCWMS"
-                  width={72}
-                  height={72}
+                  width={96}
+                  height={96}
                   className="rounded-2xl relative"
                 />
               </div>
@@ -122,7 +122,7 @@ export default function LoginPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
-              className="text-2xl font-bold text-white tracking-tight"
+              className="text-xl font-bold text-white tracking-tight"
             >
               SCWMS
             </motion.h1>
@@ -130,7 +130,7 @@ export default function LoginPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35 }}
-              className="text-sm text-white/60 mt-2 leading-relaxed max-w-xs mx-auto"
+              className="text-xs text-white/60 mt-1.5 leading-relaxed max-w-xs mx-auto"
             >
               Sistem Monitoring Proses Distribusi Armada Heterogen Pengangkut Sampah di Kota Tasikmalaya Berbasis IoT
             </motion.p>
@@ -142,7 +142,7 @@ export default function LoginPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45 }}
             onSubmit={handleSubmit(onSubmit)}
-            className="space-y-5"
+            className="space-y-4"
           >
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium text-white/80">
@@ -154,7 +154,7 @@ export default function LoginPage() {
                   type="email"
                   placeholder="admin@scwms.com"
                   {...register('email')}
-                  className="w-full h-12 px-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all text-sm"
+                  className="w-full h-10 px-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all text-sm"
                 />
               </div>
               {errors.email && (
@@ -172,7 +172,7 @@ export default function LoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Masukkan password"
                   {...register('password')}
-                  className="w-full h-12 px-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all text-sm pr-12"
+                  className="w-full h-10 px-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all text-sm pr-12"
                 />
                 <button
                   type="button"
@@ -202,7 +202,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="relative w-full h-12 rounded-xl bg-green-600 hover:bg-green-500 text-white font-semibold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group"
+              className="relative w-full h-10 rounded-xl bg-green-600 hover:bg-green-500 text-white font-semibold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group"
             >
               <span className="absolute inset-0 bg-gradient-to-r from-green-400/0 via-green-400/20 to-green-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <span className="relative flex items-center justify-center gap-2">
@@ -226,7 +226,7 @@ export default function LoginPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="text-center text-xs text-white/30 mt-8"
+            className="text-center text-xs text-white/30 mt-5"
           >
             &copy; {new Date().getFullYear()} SCWMS &mdash; Smart City Waste Monitoring System
           </motion.p>

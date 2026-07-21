@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
+import axios from 'axios'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import { sopirService } from '@/services/sopir'
 import { armadaService } from '@/services/armada'
@@ -79,7 +80,14 @@ export default function MasterSopirPage() {
       toast.success('Sopir berhasil ditambahkan')
       closeDialog()
     },
-    onError: () => toast.error('Gagal menyimpan sopir'),
+    onError: (err) => {
+      if (axios.isAxiosError(err) && err.response?.status === 422) {
+        const msgs = Object.values(err.response.data.errors ?? {}).flat() as string[]
+        msgs.forEach((msg: string) => toast.error(msg))
+      } else {
+        toast.error('Gagal menyimpan sopir')
+      }
+    },
   })
 
   const updateMutation = useMutation({
@@ -89,7 +97,14 @@ export default function MasterSopirPage() {
       toast.success('Sopir berhasil diperbarui')
       closeDialog()
     },
-    onError: () => toast.error('Gagal memperbarui sopir'),
+    onError: (err) => {
+      if (axios.isAxiosError(err) && err.response?.status === 422) {
+        const msgs = Object.values(err.response.data.errors ?? {}).flat() as string[]
+        msgs.forEach((msg: string) => toast.error(msg))
+      } else {
+        toast.error('Gagal memperbarui sopir')
+      }
+    },
   })
 
   const deleteMutation = useMutation({

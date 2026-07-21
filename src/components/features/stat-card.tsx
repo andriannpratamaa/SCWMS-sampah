@@ -20,7 +20,7 @@ interface StatCardProps {
 export function StatCard({ title, value, icon, description, loading, trend }: StatCardProps) {
   if (loading) {
     return (
-      <Card>
+      <Card className="h-full">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div className="space-y-3">
@@ -41,7 +41,7 @@ export function StatCard({ title, value, icon, description, loading, trend }: St
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="hover:shadow-md transition-shadow duration-200">
+      <Card className="h-full hover:shadow-md transition-shadow duration-200">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
