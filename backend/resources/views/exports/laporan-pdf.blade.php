@@ -26,6 +26,8 @@
                 <th>Jam</th>
                 <th>Plat Nomor</th>
                 <th>Sopir</th>
+                <th>Nama TPS</th>
+                <th>Jenis Armada</th>
                 <th>Volume (m³)</th>
                 <th>Status</th>
             </tr>
@@ -38,6 +40,8 @@
                 <td>{{ $d->jam }}</td>
                 <td>{{ $d->plat_nomor }}</td>
                 <td>{{ $d->sopir->nama ?? '-' }}</td>
+                <td>{{ $d->nama_tps ?? '-' }}</td>
+                <td>{{ $d->jenis_armada }}</td>
                 <td>{{ number_format($d->volume_sampah, 2) }}</td>
                 <td>{{ $d->status === 'terangkut' ? 'Terangkut' : 'Tidak Terangkut' }}</td>
             </tr>

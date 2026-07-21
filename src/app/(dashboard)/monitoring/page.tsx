@@ -50,6 +50,7 @@ export default function MonitoringPage() {
       render: (item) => item.sopir?.nama || '-',
     },
     { key: 'jenis_armada', header: 'Jenis Armada' },
+    { key: 'nama_tps', header: 'Nama TPS', sortable: true },
     { key: 'latitude', header: 'Latitude' },
     { key: 'longitude', header: 'Longitude' },
     {

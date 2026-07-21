@@ -10,7 +10,7 @@ class Monitoring extends Model
 
     protected $fillable = [
         'tanggal', 'jam', 'plat_nomor', 'armada_id', 'sopir_id',
-        'jenis_armada', 'latitude', 'longitude', 'volume_sampah',
+        'jenis_armada', 'nama_tps', 'latitude', 'longitude', 'volume_sampah',
         'status', 'foto',
     ];
 

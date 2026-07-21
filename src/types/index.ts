@@ -56,6 +56,7 @@ export interface Monitoring {
   armada?: Armada
   sopir?: Sopir
   jenis_armada: string
+  nama_tps?: string
   latitude: number
   longitude: number
   volume_sampah: number

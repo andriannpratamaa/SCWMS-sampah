@@ -94,6 +94,10 @@ export default function MonitoringDetailPage() {
               <p className="text-xs text-gray-500">Jenis Armada</p>
               <p className="text-sm font-medium text-gray-900">{item.jenis_armada || '-'}</p>
             </div>
+            <div>
+              <p className="text-xs text-gray-500">Nama TPS</p>
+              <p className="text-sm font-medium text-gray-900">{item.nama_tps || '-'}</p>
+            </div>
           </CardContent>
         </Card>
 

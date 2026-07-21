@@ -7,6 +7,11 @@ use Illuminate\Database\Seeder;
 
 class MonitoringSeeder extends Seeder
 {
+    private array $tpsList = [
+        'TPS Cibeureum', 'TPS Indihiang', 'TPS Kawalu',
+        'TPS Tamansari', 'TPS Mangkubumi',
+    ];
+
     public function run(): void
     {
         $now = now();
@@ -21,6 +26,7 @@ class MonitoringSeeder extends Seeder
                 'armada_id' => 1,
                 'sopir_id' => 1,
                 'jenis_armada' => 'Truck',
+                'nama_tps' => $this->tpsList[array_rand($this->tpsList)],
                 'latitude' => -6.2088,
                 'longitude' => 106.8456,
                 'volume_sampah' => rand(10, 50) / 10,
@@ -34,6 +40,7 @@ class MonitoringSeeder extends Seeder
                 'armada_id' => 2,
                 'sopir_id' => 2,
                 'jenis_armada' => 'Armroll',
+                'nama_tps' => $this->tpsList[array_rand($this->tpsList)],
                 'latitude' => -6.2146,
                 'longitude' => 106.8319,
                 'volume_sampah' => rand(10, 40) / 10,
@@ -47,6 +54,7 @@ class MonitoringSeeder extends Seeder
                 'armada_id' => 3,
                 'sopir_id' => 3,
                 'jenis_armada' => 'Truck',
+                'nama_tps' => $this->tpsList[array_rand($this->tpsList)],
                 'latitude' => -6.2254,
                 'longitude' => 106.8126,
                 'volume_sampah' => rand(15, 60) / 10,

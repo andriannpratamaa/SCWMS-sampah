@@ -43,8 +43,8 @@ class MonitoringExport implements FromCollection, WithHeadings, WithMapping
     public function headings(): array
     {
         return [
-            'Tanggal', 'Jam', 'Plat Nomor', 'Nama Sopir', 'Jenis Armada',
-            'Latitude', 'Longitude', 'Volume Sampah (m³)', 'Status',
+            'Tanggal', 'Jam', 'Plat Nomor', 'Nama Sopir', 'Nama TPS', 'Jenis Armada',
+            'Volume Sampah (m³)', 'Status', 'Latitude', 'Longitude', 'Foto',
         ];
     }
 
@@ -55,11 +55,13 @@ class MonitoringExport implements FromCollection, WithHeadings, WithMapping
             $monitoring->jam,
             $monitoring->plat_nomor,
             $monitoring->sopir->nama ?? '-',
+            $monitoring->nama_tps ?? '-',
             $monitoring->jenis_armada,
-            $monitoring->latitude,
-            $monitoring->longitude,
             (float) $monitoring->volume_sampah,
             $monitoring->status === 'terangkut' ? 'Terangkut' : 'Tidak Terangkut',
+            $monitoring->latitude,
+            $monitoring->longitude,
+            $monitoring->foto ?? '-',
         ];
     }
 }
