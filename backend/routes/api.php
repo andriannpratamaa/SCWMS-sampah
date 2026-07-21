@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\TrackingController;
 use App\Http\Controllers\Api\LaporanController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\DriverController;
 
 // Public routes
 Route::post('/login', [AuthController::class, 'login']);
@@ -45,6 +46,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/laporan', [LaporanController::class, 'index']);
     Route::get('/laporan/export-excel', [LaporanController::class, 'exportExcel']);
     Route::get('/laporan/export-pdf', [LaporanController::class, 'exportPdf']);
+
+    // Driver routes (driver only)
+    Route::middleware('role:driver')->prefix('driver')->group(function () {
+        Route::get('/dashboard', [DriverController::class, 'dashboard']);
+        Route::get('/monitorings', [DriverController::class, 'monitorings']);
+        Route::get('/monitorings/{id}', [DriverController::class, 'showMonitoring']);
+        Route::post('/monitorings', [DriverController::class, 'storeMonitoring']);
+        Route::get('/tps', [DriverController::class, 'tpsList']);
+        Route::put('/password', [DriverController::class, 'updatePassword']);
+        Route::post('/photo', [DriverController::class, 'updatePhoto']);
+    });
 
     // User Management (admin only)
     Route::middleware('role:admin')->group(function () {

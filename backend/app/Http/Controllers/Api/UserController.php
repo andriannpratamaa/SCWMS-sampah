@@ -40,7 +40,7 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
-            'role' => 'required|in:admin,operator',
+            'role' => 'required|in:admin,operator,driver',
             'status' => 'required|in:aktif,tidak_aktif',
         ]);
 
@@ -57,7 +57,7 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|min:6',
-            'role' => 'required|in:admin,operator',
+            'role' => 'required|in:admin,operator,driver',
             'status' => 'required|in:aktif,tidak_aktif',
         ]);
 

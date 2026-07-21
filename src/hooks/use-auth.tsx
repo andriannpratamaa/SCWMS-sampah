@@ -42,7 +42,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('token', data.token)
       localStorage.setItem('user', JSON.stringify(data.user))
       queryClient.setQueryData(['auth-user'], data.user)
-      router.push('/dashboard')
+      if (data.user.role === 'driver') {
+        router.push('/driver/dashboard')
+      } else {
+        router.push('/dashboard')
+      }
     },
   })
 

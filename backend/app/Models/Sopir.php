@@ -9,7 +9,7 @@ class Sopir extends Model
     protected $table = 'sopir';
 
     protected $fillable = [
-        'nama', 'nik', 'alamat', 'nomor_hp', 'armada_id', 'status',
+        'user_id', 'nama', 'nik', 'alamat', 'nomor_hp', 'armada_id', 'status',
     ];
 
     public function armada()
@@ -20,5 +20,10 @@ class Sopir extends Model
     public function monitorings()
     {
         return $this->hasMany(Monitoring::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

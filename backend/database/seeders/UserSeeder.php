@@ -17,13 +17,5 @@ class UserSeeder extends Seeder
             'role' => 'admin',
             'status' => 'aktif',
         ]);
-
-        User::create([
-            'name' => 'Operator SCWMS',
-            'email' => 'operator@scwms.com',
-            'password' => Hash::make('password'),
-            'role' => 'operator',
-            'status' => 'aktif',
-        ]);
     }
 }

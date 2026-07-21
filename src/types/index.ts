@@ -2,7 +2,7 @@ export interface User {
   id: number
   name: string
   email: string
-  role: 'admin' | 'operator'
+  role: 'admin' | 'operator' | 'driver'
   foto_profil?: string
   status: 'aktif' | 'tidak_aktif'
   created_at?: string
@@ -139,4 +139,40 @@ export interface ChangePasswordPayload {
   password_lama: string
   password_baru: string
   konfirmasi_password: string
+}
+
+export interface DriverDashboard {
+  user: User
+  sopir: DriverSopir
+  statistik: {
+    monitoring_hari_ini: number
+    volume_hari_ini: number
+    total_monitoring: number
+  }
+}
+
+export interface DriverSopir {
+  id: number
+  nama: string
+  nik: string
+  alamat: string
+  nomor_hp: string
+  armada_id?: number
+  armada?: {
+    id: number
+    plat_nomor: string
+    merk_kendaraan: string
+    jenis_armada: string
+    tahun_pembelian: number
+    volume_bak: number
+  } | null
+}
+
+export interface CreateMonitoringPayload {
+  nama_tps: string
+  latitude: number
+  longitude: number
+  volume_sampah: number
+  status: 'terangkut' | 'tidak_terangkut'
+  foto: File
 }

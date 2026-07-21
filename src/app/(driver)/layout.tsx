@@ -1,27 +1,24 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { useRouter } from 'next/navigation'
-import { Sidebar } from '@/components/layout/sidebar'
-import { Topbar } from '@/components/layout/topbar'
-import { useEffect } from 'react'
+import { DriverBottomNav } from '@/components/driver/bottom-nav'
 
-export default function DashboardLayout({
+export default function DriverLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   const { isAuthenticated, isLoading, user } = useAuth()
   const router = useRouter()
-  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.push('/login')
     }
-    if (!isLoading && user && user.role === 'driver') {
-      router.push('/driver/dashboard')
+    if (!isLoading && user && user.role !== 'driver') {
+      router.push('/dashboard')
     }
   }, [isAuthenticated, isLoading, user, router])
 
@@ -39,17 +36,14 @@ export default function DashboardLayout({
     )
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || user?.role !== 'driver') {
     return null
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="lg:pl-64">
-        <Topbar onMenuClick={() => setSidebarOpen(true)} />
-        <main className="p-4 lg:p-6">{children}</main>
-      </div>
+    <div className="min-h-screen bg-gray-50 pb-20">
+      <main className="px-4 pt-4 pb-4 max-w-lg mx-auto">{children}</main>
+      <DriverBottomNav />
     </div>
   )
 }
