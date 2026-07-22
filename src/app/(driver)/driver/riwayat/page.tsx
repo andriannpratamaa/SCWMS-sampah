@@ -5,10 +5,12 @@ import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { driverService } from '@/services/driver'
+import { getPhotoUrl } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
-import { History, Calendar, Clock, MapPin, Trash2, ChevronRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { History, Calendar, Clock, Trash2, ChevronRight, ChevronLeft } from 'lucide-react'
 
 export default function DriverRiwayatPage() {
   const router = useRouter()
@@ -16,7 +18,7 @@ export default function DriverRiwayatPage() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['driver-monitorings', page],
-    queryFn: () => driverService.getMonitorings({ page, per_page: 20 }),
+    queryFn: () => driverService.getMonitorings({ page, per_page: 10 }),
   })
 
   return (
@@ -52,7 +54,7 @@ export default function DriverRiwayatPage() {
                     <div className="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 shrink-0">
                       {item.foto ? (
                         <img
-                          src={`http://localhost:8000/storage/${item.foto}`}
+                          src={getPhotoUrl(item.foto)}
                           alt="Foto"
                           className="w-full h-full object-cover"
                         />
@@ -99,24 +101,45 @@ export default function DriverRiwayatPage() {
 
           {/* Pagination */}
           {data.last_page > 1 && (
-            <div className="flex items-center justify-center gap-2 pt-2">
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className="px-4 py-2 text-sm font-medium rounded-xl border border-gray-200 bg-white disabled:opacity-40"
-              >
-                Sebelumnya
-              </button>
-              <span className="text-sm text-gray-500">
-                {data.current_page} / {data.last_page}
-              </span>
-              <button
-                onClick={() => setPage((p) => Math.min(data.last_page, p + 1))}
-                disabled={page === data.last_page}
-                className="px-4 py-2 text-sm font-medium rounded-xl border border-gray-200 bg-white disabled:opacity-40"
-              >
-                Berikutnya
-              </button>
+            <div className="flex items-center justify-between pt-2">
+              <p className="text-sm text-gray-500">
+                Total: <span className="font-medium text-gray-700">{data.total}</span> data
+              </p>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  disabled={page <= 1}
+                  onClick={() => setPage(page - 1)}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                {Array.from({ length: data.last_page }, (_, i) => i + 1)
+                  .filter((p) => p === 1 || p === data.last_page || Math.abs(p - page) <= 1)
+                  .map((p, idx, arr) => (
+                    <span key={p} className="flex items-center">
+                      {idx > 0 && arr[idx - 1] !== p - 1 && (
+                        <span className="px-1 text-gray-300">...</span>
+                      )}
+                      <Button
+                        variant={p === page ? 'default' : 'outline'}
+                        size="icon"
+                        className="w-8 h-8 text-xs"
+                        onClick={() => setPage(p)}
+                      >
+                        {p}
+                      </Button>
+                    </span>
+                  ))}
+                <Button
+                  variant="outline"
+                  size="icon"
+                  disabled={page >= data.last_page}
+                  onClick={() => setPage(page + 1)}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
           )}
         </>

@@ -10,9 +10,16 @@ use App\Http\Controllers\Api\LaporanController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DriverController;
+use App\Http\Controllers\Api\Esp32Controller;
 
 // Public routes
 Route::post('/login', [AuthController::class, 'login']);
+
+// ESP32 routes (API Key)
+Route::middleware('esp32')->prefix('esp32')->group(function () {
+    Route::post('/tracking', [Esp32Controller::class, 'updateTracking']);
+    Route::post('/volume', [Esp32Controller::class, 'updateVolume']);
+});
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {

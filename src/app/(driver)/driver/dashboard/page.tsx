@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { Truck, MapPin, Clock, Calendar, User as UserIcon, Phone } from 'lucide-react'
-import Image from 'next/image'
+import { getPhotoUrl } from '@/lib/utils'
 
 export default function DriverDashboardPage() {
   const { user } = useAuth()
@@ -76,11 +76,9 @@ export default function DriverDashboardPage() {
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-full bg-green-600 flex items-center justify-center text-white text-xl font-bold overflow-hidden shrink-0">
               {user?.foto_profil ? (
-                <Image
-                  src={`http://localhost:8000/storage/${user.foto_profil}`}
+                <img
+                  src={getPhotoUrl(user.foto_profil)}
                   alt={sopir?.nama ?? ''}
-                  width={64}
-                  height={64}
                   className="object-cover w-full h-full"
                 />
               ) : (

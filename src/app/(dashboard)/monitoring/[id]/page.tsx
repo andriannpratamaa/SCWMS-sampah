@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Truck, User, MapPin, Trash2 } from 'lucide-react'
 import { monitoringService } from '@/services/monitoring'
+import { getPhotoUrl } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -160,7 +161,7 @@ export default function MonitoringDetailPage() {
           </CardHeader>
           <CardContent>
             <img
-              src={item.foto}
+              src={getPhotoUrl(item.foto)}
               alt="Foto sampah"
               className="rounded-xl max-h-[400px] object-cover"
             />

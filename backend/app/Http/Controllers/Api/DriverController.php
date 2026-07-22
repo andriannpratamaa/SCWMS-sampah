@@ -7,7 +7,7 @@ use App\Models\Monitoring;
 use App\Models\Sopir;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class DriverController extends Controller
 {
@@ -76,7 +76,7 @@ class DriverController extends Controller
             ->where('sopir_id', $sopir->id)
             ->orderBy('created_at', 'desc');
 
-        $perPage = $request->per_page ?? 20;
+        $perPage = $request->per_page ?? 10;
         return response()->json($query->paginate($perPage));
     }
 
@@ -103,7 +103,10 @@ class DriverController extends Controller
             'foto' => 'required|image|mimes:jpeg,png,jpg|max:5120',
         ]);
 
-        $fotoPath = $request->file('foto')->store('foto-monitoring', 'public');
+        $uploaded = Cloudinary::upload($request->file('foto')->getRealPath(), [
+            'folder' => 'scwms/foto-monitoring',
+        ]);
+        $fotoPath = $uploaded->getSecurePath();
 
         $monitoring = Monitoring::create([
             'tanggal' => now()->toDateString(),
@@ -171,14 +174,16 @@ class DriverController extends Controller
         ]);
 
         $user = $request->user();
-        $path = $request->file('foto_profil')->store('foto-profil', 'public');
-        $user->foto_profil = $path;
+        $uploaded = Cloudinary::upload($request->file('foto_profil')->getRealPath(), [
+            'folder' => 'scwms/foto-profil',
+        ]);
+        $user->foto_profil = $uploaded->getSecurePath();
         $user->save();
 
         return response()->json([
             'success' => true,
             'message' => 'Foto profil berhasil diperbarui.',
-            'data' => ['foto_profil' => $path],
+            'data' => ['foto_profil' => $uploaded->getSecurePath()],
         ]);
     }
 }

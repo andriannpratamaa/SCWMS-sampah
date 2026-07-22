@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { monitoringService } from '@/services/monitoring'
 import { useDebounce } from '@/hooks/use-debounce'
+import { getPhotoUrl } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -73,7 +74,7 @@ export default function MonitoringPage() {
       header: 'Foto',
       render: (item) =>
         item.foto ? (
-          <a href={item.foto} target="_blank" rel="noreferrer" className="text-green-600 hover:underline text-sm">
+          <a href={getPhotoUrl(item.foto)} target="_blank" rel="noreferrer" className="text-green-600 hover:underline text-sm">
             Lihat
           </a>
         ) : (

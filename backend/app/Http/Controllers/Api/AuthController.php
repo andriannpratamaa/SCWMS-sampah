@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class AuthController extends Controller
 {
@@ -53,8 +54,10 @@ class AuthController extends Controller
         $user = $request->user();
 
         if ($request->hasFile('foto_profil')) {
-            $path = $request->file('foto_profil')->store('foto-profil', 'public');
-            $user->foto_profil = $path;
+            $uploaded = Cloudinary::upload($request->file('foto_profil')->getRealPath(), [
+                'folder' => 'scwms/foto-profil',
+            ]);
+            $user->foto_profil = $uploaded->getSecurePath();
         }
 
         if ($request->has('name')) {

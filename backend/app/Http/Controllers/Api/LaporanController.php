@@ -33,7 +33,8 @@ class LaporanController extends Controller
 
         $query->orderBy('tanggal', 'desc')->orderBy('jam', 'desc');
 
-        return response()->json($query->get());
+        $perPage = $request->per_page ?? 10;
+        return response()->json($query->paginate($perPage));
     }
 
     public function exportExcel(Request $request)

@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { useParams, useRouter } from 'next/navigation'
 import { driverService } from '@/services/driver'
+import { getPhotoUrl } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -54,7 +55,7 @@ export default function DriverRiwayatDetailPage() {
           {item.foto && (
             <div className="rounded-xl overflow-hidden border border-gray-200">
               <img
-                src={`http://localhost:8000/storage/${item.foto}`}
+                src={getPhotoUrl(item.foto)}
                 alt="Foto monitoring"
                 className="w-full h-56 object-cover"
               />

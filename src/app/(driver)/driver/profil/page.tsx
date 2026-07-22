@@ -22,7 +22,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
-import Image from 'next/image'
+import { getPhotoUrl } from '@/lib/utils'
 
 const passwordSchema = z.object({
   password_lama: z.string().min(1, 'Password lama harus diisi'),
@@ -103,11 +103,9 @@ export default function DriverProfilPage() {
               <div className="relative inline-block">
                 <div className="w-24 h-24 rounded-full bg-green-600 flex items-center justify-center text-white text-3xl font-bold overflow-hidden mx-auto">
                   {user?.foto_profil ? (
-                    <Image
-                      src={`http://localhost:8000/storage/${user.foto_profil}`}
+                    <img
+                      src={getPhotoUrl(user.foto_profil)}
                       alt={sopir?.nama ?? ''}
-                      width={96}
-                      height={96}
                       className="object-cover w-full h-full"
                     />
                   ) : (

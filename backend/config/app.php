@@ -208,6 +208,8 @@ return [
     |
     */
 
+    'esp32_api_key' => env('ESP32_API_KEY'),
+
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),

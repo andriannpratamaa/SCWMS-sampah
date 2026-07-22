@@ -1,9 +1,9 @@
 import api from './api'
-import type { LaporanFilter, Monitoring } from '@/types'
+import type { LaporanFilter, Monitoring, PaginatedResponse } from '@/types'
 
 export const laporanService = {
-  async getLaporan(filter?: LaporanFilter): Promise<Monitoring[]> {
-    const { data } = await api.get<Monitoring[]>('/laporan', { params: filter })
+  async getLaporan(filter?: LaporanFilter & { page?: number; per_page?: number }): Promise<PaginatedResponse<Monitoring>> {
+    const { data } = await api.get<PaginatedResponse<Monitoring>>('/laporan', { params: filter })
     return data
   },
 

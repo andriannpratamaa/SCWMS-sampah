@@ -22,6 +22,7 @@ export default function LaporanPage() {
   const [armadaId, setArmadaId] = useState('')
   const [sopirId, setSopirId] = useState('')
   const [status, setStatus] = useState('')
+  const [page, setPage] = useState(1)
   const [exporting, setExporting] = useState<'excel' | 'pdf' | null>(null)
 
   const filter = {
@@ -30,6 +31,8 @@ export default function LaporanPage() {
     ...(armadaId && { armada_id: Number(armadaId) }),
     ...(sopirId && { sopir_id: Number(sopirId) }),
     ...(status && { status }),
+    page,
+    per_page: 10,
   }
 
   const { data, isLoading, error, refetch } = useQuery({
@@ -46,6 +49,11 @@ export default function LaporanPage() {
     queryKey: ['sopir-laporan'],
     queryFn: () => sopirService.getAll({ per_page: 100 }),
   })
+
+  const handleFilter = () => {
+    setPage(1)
+    refetch()
+  }
 
   const handleExport = async (type: 'excel' | 'pdf') => {
     setExporting(type)
@@ -177,12 +185,12 @@ export default function LaporanPage() {
             </div>
           </div>
           <div className="mt-4 flex gap-2">
-            <Button onClick={() => refetch()}>
+            <Button onClick={handleFilter}>
               <FileText className="w-4 h-4 mr-2" />
               Tampilkan
             </Button>
             <Button variant="outline" onClick={() => {
-              setTanggalAwal(''); setTanggalAkhir(''); setArmadaId(''); setSopirId(''); setStatus('')
+              setTanggalAwal(''); setTanggalAkhir(''); setArmadaId(''); setSopirId(''); setStatus(''); setPage(1)
             }}>
               Reset
             </Button>
@@ -194,11 +202,15 @@ export default function LaporanPage() {
         <CardContent className="p-6">
           <DataTable
             columns={columns}
-            data={data ?? []}
+            data={data?.data ?? []}
             loading={isLoading}
             error={error ? 'Gagal memuat laporan' : null}
             onRetry={() => refetch()}
             emptyMessage="Pilih filter dan klik Tampilkan"
+            page={data?.current_page}
+            totalPages={data?.last_page}
+            total={data?.total}
+            onPageChange={setPage}
           />
         </CardContent>
       </Card>
