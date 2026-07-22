@@ -4,6 +4,30 @@ import { useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { useRouter } from 'next/navigation'
 import { DriverBottomNav } from '@/components/driver/bottom-nav'
+import { OfflineDetector } from '@/components/driver/offline-detector'
+import Image from 'next/image'
+
+function SplashScreen() {
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-950 via-green-900 to-black">
+      <div className="splash-logo mb-4">
+        <Image
+          src="/scwms-icon1.png"
+          alt="SCWMS"
+          width={80}
+          height={80}
+          className="rounded-2xl"
+          priority
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        <div className="w-2 h-2 rounded-full bg-green-500 animate-bounce" style={{ animationDelay: '0ms' }} />
+        <div className="w-2 h-2 rounded-full bg-green-500 animate-bounce" style={{ animationDelay: '150ms' }} />
+        <div className="w-2 h-2 rounded-full bg-green-500 animate-bounce" style={{ animationDelay: '300ms' }} />
+      </div>
+    </div>
+  )
+}
 
 export default function DriverLayout({
   children,
@@ -23,17 +47,7 @@ export default function DriverLayout({
   }, [isAuthenticated, isLoading, user, router])
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="flex flex-col items-center gap-3">
-          <svg className="animate-spin h-8 w-8 text-green-600" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-          </svg>
-          <p className="text-sm text-gray-500">Memuat...</p>
-        </div>
-      </div>
-    )
+    return <SplashScreen />
   }
 
   if (!isAuthenticated || user?.role !== 'driver') {
@@ -41,9 +55,19 @@ export default function DriverLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      <main className="px-4 pt-4 pb-4 max-w-lg mx-auto">{children}</main>
-      <DriverBottomNav />
-    </div>
+    <OfflineDetector>
+      <div
+        className="min-h-screen bg-gray-50"
+        style={{ paddingBottom: 'calc(64px + var(--safe-area-bottom))' }}
+      >
+        <main
+          className="px-4 pt-4 pb-4 max-w-lg mx-auto"
+          style={{ paddingTop: 'calc(16px + var(--safe-area-top))' }}
+        >
+          {children}
+        </main>
+        <DriverBottomNav />
+      </div>
+    </OfflineDetector>
   )
 }

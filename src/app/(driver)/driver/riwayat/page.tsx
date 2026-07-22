@@ -46,7 +46,7 @@ export default function DriverRiwayatPage() {
             {data.data.map((item) => (
               <Card
                 key={item.id}
-                className="cursor-pointer hover:shadow-md transition-shadow active:scale-[0.99]"
+                className="cursor-pointer active:shadow-md active:scale-[0.98] transition-transform"
                 onClick={() => router.push(`/driver/riwayat/${item.id}`)}
               >
                 <CardContent className="p-4">

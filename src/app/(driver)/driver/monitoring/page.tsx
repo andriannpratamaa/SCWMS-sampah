@@ -327,7 +327,7 @@ export default function DriverMonitoringPage() {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center justify-center gap-2 w-full h-24 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 text-gray-500 hover:border-green-400 hover:bg-green-50 transition-all"
+            className="flex items-center justify-center gap-2 w-full h-24 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 text-gray-500 active:border-green-400 active:bg-green-50 transition-colors"
           >
             <Camera className="w-6 h-6" />
             <span className="text-sm font-medium">Ambil Foto</span>

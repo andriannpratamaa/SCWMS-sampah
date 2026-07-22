@@ -114,7 +114,7 @@ export default function DriverProfilPage() {
                 </div>
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute -bottom-1 -right-1 w-9 h-9 bg-white rounded-full border border-gray-200 shadow-sm flex items-center justify-center hover:bg-gray-50 transition-colors"
+                  className="absolute -bottom-1 -right-1 w-9 h-9 bg-white rounded-full border border-gray-200 shadow-sm flex items-center justify-center active:bg-gray-100 transition-colors"
                 >
                   <Camera className="w-4 h-4 text-gray-600" />
                 </button>
@@ -195,7 +195,7 @@ export default function DriverProfilPage() {
             </Button>
             <Button
               variant="outline"
-              className="w-full justify-start h-12 text-red-500 hover:text-red-600 hover:bg-red-50 border-red-200"
+              className="w-full justify-start min-h-[48px] text-red-500 active:text-red-600 active:bg-red-50 border-red-200"
               onClick={logout}
             >
               <LogOut className="w-4 h-4 mr-3" />

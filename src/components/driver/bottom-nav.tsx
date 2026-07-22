@@ -15,8 +15,11 @@ export function DriverBottomNav() {
   const router = useRouter()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 safe-area-bottom">
-      <div className="max-w-lg mx-auto flex items-center justify-around h-16">
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200"
+      style={{ paddingBottom: 'var(--safe-area-bottom)' }}
+    >
+      <div className="max-w-lg mx-auto flex items-center justify-around min-h-[64px]">
         {navItems.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
           const Icon = item.icon
@@ -24,8 +27,8 @@ export function DriverBottomNav() {
             <button
               key={item.href}
               onClick={() => router.push(item.href)}
-              className={`flex flex-col items-center justify-center w-full h-full gap-0.5 transition-colors ${
-                isActive ? 'text-green-600' : 'text-gray-400 hover:text-gray-600'
+              className={`flex flex-col items-center justify-center w-full min-h-[48px] gap-0.5 active:opacity-60 transition-opacity ${
+                isActive ? 'text-green-600' : 'text-gray-400'
               }`}
             >
               <Icon className="w-5 h-5" />
