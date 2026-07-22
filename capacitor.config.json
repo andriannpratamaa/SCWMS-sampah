@@ -1,0 +1,9 @@
+{
+  "appId": "com.scwms.driver",
+  "appName": "SCWMS Driver",
+  "webDir": ".next",
+  "server": {
+    "url": "http://192.168.0.88:3000",
+    "cleartext": true
+  }
+}
