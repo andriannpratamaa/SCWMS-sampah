@@ -1,3 +1,2 @@
--keepclassmembers class com.scwms.webview.WebAppInterface {
-    @android.webkit.JavascriptInterface <methods>;
-}
+# SCWMS Driver ProGuard Rules
+-keep class com.scwms.webview.WebAppInterface { *; }

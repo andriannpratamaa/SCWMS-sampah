@@ -4,7 +4,7 @@
             "outputFile": "com.scwms.webview.app-mergeDebugResources-2:/values-bn/values-bn.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Andriannn\\.gradle\\caches\\8.10.2\\transforms\\fccebe4f1cb8a19aeda8cc1f176a17a2\\transformed\\core-1.13.0\\res\\values-bn\\values-bn.xml",
+                    "source": "C:\\Users\\Andriannn\\.gradle\\caches\\8.10.2\\transforms\\423df669910aa99fc90c0249b651fd02\\transformed\\core-1.13.0\\res\\values-bn\\values-bn.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Andriannn\\.gradle\\caches\\8.10.2\\transforms\\996c91e0fba6a84ad71f14e29a8a33b2\\transformed\\appcompat-1.7.0\\res\\values-bn\\values-bn.xml",
+                    "source": "C:\\Users\\Andriannn\\.gradle\\caches\\8.10.2\\transforms\\6ac84f50de6834686f7ce0c0bed7144a\\transformed\\appcompat-1.7.0\\res\\values-bn\\values-bn.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
