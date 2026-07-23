@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupSwipeRefresh() {
         swipeRefresh.setOnRefreshListener {
-            loadUrl()
+            webView.reload()
         }
         swipeRefresh.setColorSchemeResources(
             android.R.color.holo_green_dark,
@@ -212,7 +212,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun retry() {
         swipeRefresh.isRefreshing = true
-        loadUrl()
+        webView.reload()
     }
 
     private fun showError(message: String) {
