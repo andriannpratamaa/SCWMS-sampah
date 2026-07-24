@@ -18,7 +18,7 @@ class DashboardController extends Controller
             'armada_aktif' => Armada::where('status', 'aktif')->count(),
             'jumlah_sopir' => Sopir::count(),
             'pengangkutan_hari_ini' => Monitoring::whereDate('tanggal', today())->count(),
-            'volume_sampah_hari_ini' => (float) Monitoring::whereDate('tanggal', today())->sum('volume_sampah'),
+            'volume_sampah_hari_ini' => round((float) Monitoring::whereDate('tanggal', today())->sum('volume_sampah'), 2),
             'total_pengangkutan_bulan_ini' => Monitoring::whereMonth('tanggal', now()->month)
                 ->whereYear('tanggal', now()->year)->count(),
             'total_tps' => 12,

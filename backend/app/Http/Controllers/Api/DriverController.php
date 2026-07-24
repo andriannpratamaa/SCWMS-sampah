@@ -34,9 +34,9 @@ class DriverController extends Controller
         $monitoringHariIni = Monitoring::where('sopir_id', $sopir->id)
             ->whereDate('tanggal', $today)
             ->count();
-        $volumeHariIni = (float) Monitoring::where('sopir_id', $sopir->id)
+        $volumeHariIni = round((float) Monitoring::where('sopir_id', $sopir->id)
             ->whereDate('tanggal', $today)
-            ->sum('volume_sampah');
+            ->sum('volume_sampah'), 2);
 
         $tracking = null;
         if ($sopir->armada) {

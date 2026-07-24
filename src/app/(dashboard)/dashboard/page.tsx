@@ -112,7 +112,7 @@ export default function DashboardPage() {
         />
         <StatCard
           title="Volume Sampah Hari Ini"
-          value={(stats?.volume_sampah_hari_ini ?? 0) + ' m³'}
+          value={(stats?.volume_sampah_hari_ini ?? 0).toFixed(2) + ' m³'}
           icon={<Trash2 className="w-6 h-6" />}
           loading={statsLoading}
         />

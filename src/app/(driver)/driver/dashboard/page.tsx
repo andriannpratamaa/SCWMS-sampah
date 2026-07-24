@@ -185,7 +185,7 @@ export default function DriverDashboardPage() {
           <Card>
             <CardContent className="p-4 text-center">
               <Truck className="w-5 h-5 text-green-600 mx-auto mb-1" />
-              <p className="text-xl font-bold text-gray-900">{stat.volume_hari_ini} m³</p>
+              <p className="text-xl font-bold text-gray-900">{stat.volume_hari_ini.toFixed(2)} m³</p>
               <p className="text-[10px] text-gray-500">Volume</p>
             </CardContent>
           </Card>
