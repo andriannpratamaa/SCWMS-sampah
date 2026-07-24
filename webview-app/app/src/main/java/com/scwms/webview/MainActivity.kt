@@ -198,6 +198,9 @@ class MainActivity : AppCompatActivity() {
         swipeRefresh.setOnRefreshListener {
             webView.reload()
         }
+        swipeRefresh.setOnChildScrollUpCallback { _, _ ->
+            !webView.canScrollVertically(-1)
+        }
         swipeRefresh.setColorSchemeResources(
             android.R.color.holo_green_dark,
             android.R.color.holo_green_light
