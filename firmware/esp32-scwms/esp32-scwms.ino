@@ -2,6 +2,7 @@
 #include <HTTPClient.h>
 #include <TinyGPSPlus.h>
 #include <ArduinoJson.h>
+#include <LiquidCrystal_I2C.h>
 
 #define WIFI_SSID      "MOZAA"
 #define WIFI_PASSWORD  "ANDRIAN02"
@@ -22,13 +23,22 @@
 #define SERVER_PORT     3000
 
 #define GPS_INTERVAL_MS      30000UL
-#define VOLUME_INTERVAL_MS   60000UL
+#define VOLUME_INTERVAL_MS   30000UL
+#define LCD_UPDATE_MS        5000UL
 
+#define LCD_ADDR    0x27
+#define LCD_COLS    16
+#define LCD_ROWS    2
+
+LiquidCrystal_I2C lcd(LCD_ADDR, LCD_COLS, LCD_ROWS);
 TinyGPSPlus gps;
 HardwareSerial gpsSerial(2);
 
 unsigned long lastGpsSend = 0;
 unsigned long lastVolumeSend = 0;
+unsigned long lastLcdUpdate = 0;
+int lcdScreen = 0;
+float lastDistance = -1;
 
 void connectWiFi();
 void buzzerBeep(int times, int delayMs);
@@ -49,8 +59,29 @@ void setup() {
 
     gpsSerial.begin(GPS_BAUD, SERIAL_8N1, GPS_RX_PIN, GPS_TX_PIN);
 
+    lcd.init();
+    lcd.backlight();
+    lcd.setCursor(0, 0);
+    lcd.print("  WELCOME TO  ");
+    lcd.setCursor(0, 1);
+    lcd.print("   SCWMS   ");
+    delay(2000);
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Connecting WiFi");
+    lcd.setCursor(0, 1);
+    lcd.print("Please wait...");
+
     connectWiFi();
     buzzerBeep(2, 150);
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("WiFi Connected");
+    lcd.setCursor(0, 1);
+    lcd.print(WiFi.localIP().toString());
+    delay(2000);
 
     Serial.println("===== ESP32 SCWMS =====");
 }
@@ -92,6 +123,8 @@ void loop() {
 
         if (distance > 0) {
 
+            lastDistance = distance;
+
             Serial.printf("Jarak sensor: %.1f cm\n", distance);
 
             sendVolume(distance);
@@ -103,6 +136,50 @@ void loop() {
         }
 
         lastVolumeSend = now;
+    }
+
+    if (now - lastLcdUpdate >= LCD_UPDATE_MS) {
+
+        lcd.clear();
+
+        if (lcdScreen == 0) {
+
+            lcd.setCursor(0, 0);
+            lcd.print("Lokasi:");
+
+            lcd.setCursor(0, 1);
+            if (gps.location.isValid()) {
+                char latStr[10], lngStr[10];
+                dtostrf(gps.location.lat(), 7, 4, latStr);
+                dtostrf(gps.location.lng(), 7, 4, lngStr);
+                lcd.print(latStr);
+                lcd.print(",");
+                lcd.print(lngStr);
+            } else {
+                lcd.print("Mencari GPS...");
+            }
+
+            lcdScreen = 1;
+
+        } else {
+
+            lcd.setCursor(0, 0);
+            lcd.print("Tinggi Sampah:");
+
+            lcd.setCursor(0, 1);
+            if (lastDistance > 0) {
+                lcd.print(lastDistance, 1);
+                lcd.print(" cm");
+            } else {
+                lcd.print("Mengukur...");
+            }
+
+            lcdScreen = 0;
+
+        }
+
+        lastLcdUpdate = now;
+
     }
 
 }
