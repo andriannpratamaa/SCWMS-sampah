@@ -64,10 +64,10 @@ export default function TrackingPage() {
             ) : armada && armada.length > 0 ? (
               <div className="space-y-3">
                 {armada.map((a) => (
-                  <div key={a.id} className="p-3 rounded-xl bg-gray-50 space-y-2">
+                    <div key={a.id} className="p-3 rounded-xl bg-gray-50 space-y-2">
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-medium text-gray-900">{a.plat_nomor}</p>
-                      <span className="w-2 h-2 rounded-full bg-green-500" />
+                      <span className={`w-2 h-2 rounded-full ${a.is_online ? 'bg-green-500' : 'bg-gray-300'}`} />
                     </div>
                     <p className="text-xs text-gray-500">{a.sopir_nama}</p>
                     <div className="flex items-center justify-between text-xs">

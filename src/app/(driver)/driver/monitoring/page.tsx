@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
 import { driverService } from '@/services/driver'
+import axios from 'axios'
 import {
   MapPin,
   Camera,
@@ -13,13 +14,26 @@ import {
   RefreshCw,
   Truck,
   Navigation,
-  Trash2,
   CheckCircle,
   XCircle,
+  Wifi,
+  WifiOff,
+  Pencil,
+  Plus,
+  Trash2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Input } from '@/components/ui/input'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import {
   Select,
   SelectContent,
@@ -51,6 +65,7 @@ export default function DriverMonitoringPage() {
   const { data: dashboard } = useQuery({
     queryKey: ['driver-dashboard'],
     queryFn: driverService.getDashboard,
+    refetchInterval: 30000,
   })
 
   const createMutation = useMutation({
@@ -62,8 +77,68 @@ export default function DriverMonitoringPage() {
       resetForm()
       router.push('/driver/dashboard')
     },
+    onError: (error: unknown) => {
+      if (axios.isAxiosError(error)) {
+        if (!error.response) {
+          toast.error('Tidak dapat terhubung ke server.')
+        } else if (error.response.status === 422) {
+          const msg = Object.values(error.response.data?.errors || {}).flat().join(', ')
+          toast.error(msg || 'Data tidak valid.')
+        } else if (error.response.status === 401) {
+          toast.error('Sesi habis. Silakan login ulang.')
+        } else {
+          toast.error(error.response.data?.message || 'Gagal mengirim data monitoring.')
+        }
+      } else {
+        toast.error('Gagal mengirim data monitoring.')
+      }
+    },
+  })
+
+  const [tpsDialogOpen, setTpsDialogOpen] = useState(false)
+  const [newTpsName, setNewTpsName] = useState('')
+  const [editingTps, setEditingTps] = useState<{ id: number; nama: string } | null>(null)
+
+  const createTpsMutation = useMutation({
+    mutationFn: (nama: string) => driverService.createTps(nama),
+    onSuccess: () => {
+      toast.success('TPS berhasil ditambahkan.')
+      setNewTpsName('')
+      queryClient.invalidateQueries({ queryKey: ['driver-tps'] })
+    },
+    onError: (error: unknown) => {
+      if (axios.isAxiosError(error) && error.response?.data?.errors?.nama) {
+        toast.error(error.response.data.errors.nama.join(', '))
+      } else {
+        toast.error('Gagal menambah TPS.')
+      }
+    },
+  })
+
+  const updateTpsMutation = useMutation({
+    mutationFn: ({ id, nama }: { id: number; nama: string }) => driverService.updateTps(id, nama),
+    onSuccess: () => {
+      toast.success('TPS berhasil diubah.')
+      setEditingTps(null)
+      queryClient.invalidateQueries({ queryKey: ['driver-tps'] })
+    },
+    onError: (error: unknown) => {
+      if (axios.isAxiosError(error) && error.response?.data?.errors?.nama) {
+        toast.error(error.response.data.errors.nama.join(', '))
+      } else {
+        toast.error('Gagal mengubah TPS.')
+      }
+    },
+  })
+
+  const deleteTpsMutation = useMutation({
+    mutationFn: (id: number) => driverService.deleteTps(id),
+    onSuccess: () => {
+      toast.success('TPS berhasil dihapus.')
+      queryClient.invalidateQueries({ queryKey: ['driver-tps'] })
+    },
     onError: () => {
-      toast.error('Gagal mengirim data monitoring.')
+      toast.error('Gagal menghapus TPS.')
     },
   })
 
@@ -113,10 +188,6 @@ export default function DriverMonitoringPage() {
     )
   }
 
-  useEffect(() => {
-    getLocation()
-  }, [])
-
   const handleFoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -124,6 +195,9 @@ export default function DriverMonitoringPage() {
     const reader = new FileReader()
     reader.onload = (ev) => setFotoPreview(ev.target?.result as string)
     reader.readAsDataURL(file)
+    if (!latitude && !gpsLoading) {
+      getLocation()
+    }
   }
 
   const handleSubmit = () => {
@@ -148,7 +222,7 @@ export default function DriverMonitoringPage() {
     payload.append('nama_tps', namaTps)
     payload.append('latitude', String(latitude))
     payload.append('longitude', String(longitude))
-    payload.append('volume_sampah', '0')
+    payload.append('volume_sampah', String(volumeSampahReal))
     payload.append('status', status)
     payload.append('foto', fotoFile)
 
@@ -156,7 +230,8 @@ export default function DriverMonitoringPage() {
   }
 
   const armada = dashboard?.sopir?.armada
-  const volumeBak = armada?.volume_bak ?? 0
+  const tracking = dashboard?.tracking
+  const volumeSampahReal = tracking?.volume_sampah ?? 0
   const isSubmitting = createMutation.isPending
   const canSubmit = namaTps && status && fotoFile && latitude !== null && longitude !== null && !isSubmitting
 
@@ -189,7 +264,111 @@ export default function DriverMonitoringPage() {
 
       {/* Nama TPS */}
       <div className="space-y-1.5">
-        <label className="text-sm font-medium text-gray-700">Nama TPS</label>
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium text-gray-700">Nama TPS</label>
+          <Dialog open={tpsDialogOpen} onOpenChange={(open) => { setTpsDialogOpen(open); if (!open) { setNewTpsName(''); setEditingTps(null) } }}>
+            <DialogTrigger asChild>
+              <Button type="button" variant="ghost" size="sm" className="h-7 text-xs gap-1 text-green-700">
+                <Plus className="w-3 h-3" />
+                Kelola
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Kelola TPS</DialogTitle>
+              </DialogHeader>
+
+              {/* Add new TPS */}
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Nama TPS baru"
+                  value={newTpsName}
+                  onChange={(e) => setNewTpsName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && newTpsName.trim()) {
+                      createTpsMutation.mutate(newTpsName.trim())
+                    }
+                  }}
+                />
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    if (newTpsName.trim()) createTpsMutation.mutate(newTpsName.trim())
+                  }}
+                  disabled={!newTpsName.trim() || createTpsMutation.isPending}
+                >
+                  Tambah
+                </Button>
+              </div>
+
+              {/* TPS list */}
+              <div className="space-y-1 mt-2">
+                {tpsList?.map((tps) => (
+                  <div
+                    key={tps.id}
+                    className="flex items-center justify-between rounded-lg border border-gray-200 px-3 py-2"
+                  >
+                    {editingTps?.id === tps.id ? (
+                      <div className="flex-1 flex gap-2 items-center">
+                        <Input
+                          value={editingTps.nama}
+                          onChange={(e) => setEditingTps({ ...editingTps, nama: e.target.value })}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && editingTps.nama.trim()) {
+                              updateTpsMutation.mutate({ id: editingTps.id, nama: editingTps.nama.trim() })
+                            }
+                            if (e.key === 'Escape') setEditingTps(null)
+                          }}
+                          className="h-8 text-sm"
+                        />
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8 text-green-700"
+                          onClick={() => {
+                            if (editingTps.nama.trim()) {
+                              updateTpsMutation.mutate({ id: editingTps.id, nama: editingTps.nama.trim() })
+                            }
+                          }}
+                          disabled={updateTpsMutation.isPending}
+                        >
+                          <CheckCircle className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <span className="text-sm font-medium text-gray-900">{tps.nama}</span>
+                        <div className="flex gap-1">
+                          <button
+                            type="button"
+                            onClick={() => setEditingTps({ id: tps.id, nama: tps.nama })}
+                            className="p-1.5 rounded-md hover:bg-gray-100 text-gray-500"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (confirm(`Hapus TPS "${tps.nama}"?`)) {
+                                deleteTpsMutation.mutate(tps.id)
+                              }
+                            }}
+                            className="p-1.5 rounded-md hover:bg-red-50 text-red-500"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ))}
+                {tpsList?.length === 0 && (
+                  <p className="text-sm text-gray-500 text-center py-4">Belum ada TPS.</p>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
         {tpsLoading ? (
           <Skeleton className="h-10 w-full rounded-xl" />
         ) : (
@@ -199,8 +378,8 @@ export default function DriverMonitoringPage() {
             </SelectTrigger>
             <SelectContent>
               {tpsList?.map((tps) => (
-                <SelectItem key={tps} value={tps}>
-                  {tps}
+                <SelectItem key={tps.id} value={tps.nama}>
+                  {tps.nama}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -247,20 +426,49 @@ export default function DriverMonitoringPage() {
           ) : (
             <div className="flex items-center gap-2 text-sm text-gray-400">
               <MapPin className="w-4 h-4" />
-              {gpsLoading ? 'Mendapatkan lokasi...' : 'Klik Refresh untuk ambil lokasi'}
+              {gpsLoading ? 'Mendapatkan lokasi...' : 'Lokasi akan diambil setelah foto'}
             </div>
           )}
         </CardContent>
       </Card>
 
-      {/* Volume Sampah (read only - from ESP32) */}
-      <div className="space-y-1.5">
-        <label className="text-sm font-medium text-gray-700">Volume Sampah (m³)</label>
-        <div className="flex h-10 w-full items-center rounded-xl border border-gray-300 bg-gray-100 px-3 text-sm text-gray-500">
-          {volumeBak > 0 ? `${volumeBak} m³ (dari ESP32)` : 'Menunggu data ESP32...'}
-        </div>
-        <p className="text-[10px] text-gray-400">Data volume dari sensor ESP32 otomatis</p>
-      </div>
+      {/* ESP32 Status */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex items-center gap-2 mb-2">
+            {tracking?.is_online ? (
+              <Wifi className="w-4 h-4 text-green-600" />
+            ) : (
+              <WifiOff className="w-4 h-4 text-gray-400" />
+            )}
+            <span className="text-sm font-medium text-gray-700">ESP32</span>
+            <Badge
+              variant={tracking?.is_online ? 'success' : 'secondary'}
+              className="ml-auto text-[10px]"
+            >
+              {tracking?.is_online ? 'Online' : 'Offline'}
+            </Badge>
+          </div>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="p-2 rounded-lg bg-gray-50">
+              <p className="text-[10px] text-gray-500">Volume Sampah Real</p>
+              <p className="font-semibold text-gray-900">
+                {tracking?.volume_sampah != null
+                  ? `${tracking.volume_sampah.toFixed(2)} m³`
+                  : '-'}
+              </p>
+            </div>
+            <div className="p-2 rounded-lg bg-gray-50">
+              <p className="text-[10px] text-gray-500">Update</p>
+              <p className="font-semibold text-gray-900 text-[11px]">
+                {tracking?.update_terakhir
+                  ? new Date(tracking.update_terakhir).toLocaleTimeString('id-ID')
+                  : '-'}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Status */}
       <div className="space-y-1.5">
@@ -300,7 +508,6 @@ export default function DriverMonitoringPage() {
           ref={fileInputRef}
           type="file"
           accept="image/*"
-          capture="environment"
           className="hidden"
           onChange={handleFoto}
         />

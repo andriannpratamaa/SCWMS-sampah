@@ -198,7 +198,7 @@ export default function DashboardPage() {
                       key={a.id}
                       className="flex items-center gap-3 p-3 rounded-xl bg-gray-50"
                     >
-                      <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-xs font-bold">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${a.is_online ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'}`}>
                         {a.plat_nomor?.slice(0, 2)}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -207,9 +207,11 @@ export default function DashboardPage() {
                         </p>
                         <p className="text-xs text-gray-500 truncate">{a.sopir_nama}</p>
                       </div>
-                      <span className="text-xs text-green-600 font-medium">
-                        {a.volume_sampah} m³
-                      </span>
+                      <div className="text-right">
+                        <span className={`text-xs font-medium ${a.is_online ? 'text-green-600' : 'text-gray-400'}`}>
+                          ● {a.is_online ? 'Online' : 'Offline'}
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>

@@ -42,17 +42,18 @@ class Esp32Controller extends Controller
     {
         $request->validate([
             'plat_nomor' => 'required|string|exists:armada,plat_nomor',
-            'tinggi_sampah' => 'required|numeric|min:0',
+            'jarak_sensor' => 'required|numeric|min:0',
         ]);
 
         $armada = Armada::where('plat_nomor', $request->plat_nomor)->first();
 
-        $panjang = $armada->panjang_bak;
-        $lebar = $armada->lebar_bak;
-        $tinggiSampah = $request->tinggi_sampah;
+        $panjang = (float) $armada->panjang_bak;
+        $lebar = (float) $armada->lebar_bak;
+        $tinggiBak = (float) $armada->tinggi_bak;
+        $jarakSensor = (float) $request->jarak_sensor;
 
-        $volume = ($panjang * $lebar * $tinggiSampah) / 1000000;
-        $volume = round($volume, 2);
+        $tinggiSampah = max(0, $tinggiBak - $jarakSensor);
+        $volume = round(($panjang * $lebar * $tinggiSampah) / 1000000, 2);
 
         Tracking::where('armada_id', $armada->id)
             ->update(['volume_sampah' => $volume, 'update_terakhir' => now()]);
@@ -71,6 +72,7 @@ class Esp32Controller extends Controller
             'message' => 'Volume sampah berhasil diperbarui.',
             'data' => [
                 'plat_nomor' => $armada->plat_nomor,
+                'jarak_sensor' => $jarakSensor,
                 'tinggi_sampah' => $tinggiSampah,
                 'volume_sampah' => $volume,
             ],

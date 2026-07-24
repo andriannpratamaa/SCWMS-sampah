@@ -103,6 +103,7 @@ export interface ArmadaAktif {
   longitude: number
   volume_sampah: number
   update_terakhir: string
+  is_online: boolean
 }
 
 export interface LaporanFilter {
@@ -141,9 +142,18 @@ export interface ChangePasswordPayload {
   konfirmasi_password: string
 }
 
+export interface DriverTracking {
+  latitude: number
+  longitude: number
+  volume_sampah: number
+  update_terakhir: string | null
+  is_online: boolean
+}
+
 export interface DriverDashboard {
   user: User
   sopir: DriverSopir
+  tracking: DriverTracking | null
   statistik: {
     monitoring_hari_ini: number
     volume_hari_ini: number
@@ -166,6 +176,11 @@ export interface DriverSopir {
     tahun_pembelian: number
     volume_bak: number
   } | null
+}
+
+export interface TpsItem {
+  id: number
+  nama: string
 }
 
 export interface CreateMonitoringPayload {

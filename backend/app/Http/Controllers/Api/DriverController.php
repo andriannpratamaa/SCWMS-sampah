@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Monitoring;
 use App\Models\Sopir;
+use App\Models\Tps;
+use App\Models\Tracking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
@@ -36,6 +38,22 @@ class DriverController extends Controller
             ->whereDate('tanggal', $today)
             ->sum('volume_sampah');
 
+        $tracking = null;
+        if ($sopir->armada) {
+            $latest = Tracking::where('armada_id', $sopir->armada_id)
+                ->latest('update_terakhir')
+                ->first();
+            if ($latest) {
+                $tracking = [
+                    'latitude' => (float) $latest->latitude,
+                    'longitude' => (float) $latest->longitude,
+                    'volume_sampah' => (float) $latest->volume_sampah,
+                    'update_terakhir' => $latest->update_terakhir,
+                    'is_online' => $latest->update_terakhir && $latest->update_terakhir->diffInMinutes(now()) < 5,
+                ];
+            }
+        }
+
         return response()->json([
             'user' => [
                 'id' => $user->id,
@@ -60,6 +78,7 @@ class DriverController extends Controller
                     'volume_bak' => $sopir->armada->volume_bak,
                 ] : null,
             ],
+            'tracking' => $tracking,
             'statistik' => [
                 'monitoring_hari_ini' => $monitoringHariIni,
                 'volume_hari_ini' => $volumeHariIni,
@@ -132,13 +151,41 @@ class DriverController extends Controller
 
     public function tpsList()
     {
-        $tps = Monitoring::select('nama_tps')
-            ->whereNotNull('nama_tps')
-            ->distinct()
-            ->orderBy('nama_tps')
-            ->pluck('nama_tps');
+        $tps = Tps::orderBy('nama')->get(['id', 'nama']);
 
         return response()->json($tps);
+    }
+
+    public function tpsStore(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:100|unique:tps,nama',
+        ]);
+
+        $tps = Tps::create(['nama' => $request->nama]);
+
+        return response()->json(['success' => true, 'data' => $tps], 201);
+    }
+
+    public function tpsUpdate($id, Request $request)
+    {
+        $tps = Tps::findOrFail($id);
+
+        $request->validate([
+            'nama' => 'required|string|max:100|unique:tps,nama,' . $id,
+        ]);
+
+        $tps->update(['nama' => $request->nama]);
+
+        return response()->json(['success' => true, 'data' => $tps]);
+    }
+
+    public function tpsDestroy($id)
+    {
+        $tps = Tps::findOrFail($id);
+        $tps->delete();
+
+        return response()->json(['success' => true, 'message' => 'TPS berhasil dihapus.']);
     }
 
     public function updatePassword(Request $request)

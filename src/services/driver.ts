@@ -4,6 +4,7 @@ import type {
   Monitoring,
   PaginatedResponse,
   ChangePasswordPayload,
+  TpsItem,
 } from '@/types'
 
 export const driverService = {
@@ -34,8 +35,23 @@ export const driverService = {
     return data
   },
 
-  async getTpsList(): Promise<string[]> {
-    const { data } = await api.get<string[]>('/driver/tps')
+  async getTpsList(): Promise<TpsItem[]> {
+    const { data } = await api.get<TpsItem[]>('/driver/tps')
+    return data
+  },
+
+  async createTps(nama: string): Promise<{ success: boolean; data: TpsItem }> {
+    const { data } = await api.post('/driver/tps', { nama })
+    return data
+  },
+
+  async updateTps(id: number, nama: string): Promise<{ success: boolean; data: TpsItem }> {
+    const { data } = await api.put(`/driver/tps/${id}`, { nama })
+    return data
+  },
+
+  async deleteTps(id: number): Promise<{ success: boolean; message: string }> {
+    const { data } = await api.delete(`/driver/tps/${id}`)
     return data
   },
 

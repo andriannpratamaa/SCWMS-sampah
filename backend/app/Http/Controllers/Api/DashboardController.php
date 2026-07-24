@@ -84,6 +84,7 @@ class DashboardController extends Controller
                     'longitude' => (float) $t->longitude,
                     'volume_sampah' => (float) $t->volume_sampah,
                     'update_terakhir' => $t->update_terakhir ? $t->update_terakhir->diffForHumans() : '-',
+                    'is_online' => $t->update_terakhir && $t->update_terakhir->gt(now()->subMinutes(5)),
                 ];
             });
 

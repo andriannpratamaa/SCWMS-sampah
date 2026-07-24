@@ -8,7 +8,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
-import { Truck, MapPin, Clock, Calendar, User as UserIcon, Phone } from 'lucide-react'
+import { Truck, MapPin, Clock, Calendar, User as UserIcon, Phone, Wifi, WifiOff } from 'lucide-react'
 import { getPhotoUrl } from '@/lib/utils'
 
 export default function DriverDashboardPage() {
@@ -29,6 +29,7 @@ export default function DriverDashboardPage() {
   const sopir = dashboard?.sopir
   const stat = dashboard?.statistik
   const armada = sopir?.armada
+  const tracking = dashboard?.tracking
 
   const today = time.toLocaleDateString('id-ID', {
     weekday: 'long',
@@ -132,6 +133,44 @@ export default function DriverDashboardPage() {
           </CardContent>
         </Card>
       )}
+
+      {/* ESP32 Status */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex items-center gap-3 mb-3">
+            {tracking?.is_online ? (
+              <Wifi className="w-5 h-5 text-green-600" />
+            ) : (
+              <WifiOff className="w-5 h-5 text-gray-400" />
+            )}
+            <h2 className="font-semibold text-gray-900">Status ESP32</h2>
+            <Badge
+              variant={tracking?.is_online ? 'success' : 'secondary'}
+              className="ml-auto"
+            >
+              {tracking?.is_online ? 'Online' : 'Offline'}
+            </Badge>
+          </div>
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="p-3 rounded-xl bg-gray-50">
+              <p className="text-xs text-gray-500">Volume Sampah</p>
+              <p className="font-semibold text-gray-900">
+                {tracking?.volume_sampah != null
+                  ? `${tracking.volume_sampah.toFixed(2)} m³`
+                  : '-'}
+              </p>
+            </div>
+            <div className="p-3 rounded-xl bg-gray-50">
+              <p className="text-xs text-gray-500">Terakhir Update</p>
+              <p className="font-semibold text-gray-900 text-xs">
+                {tracking?.update_terakhir
+                  ? new Date(tracking.update_terakhir).toLocaleString('id-ID')
+                  : '-'}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Stats */}
       {stat && (

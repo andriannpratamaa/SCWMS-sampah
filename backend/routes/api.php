@@ -61,6 +61,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/monitorings/{id}', [DriverController::class, 'showMonitoring']);
         Route::post('/monitorings', [DriverController::class, 'storeMonitoring']);
         Route::get('/tps', [DriverController::class, 'tpsList']);
+        Route::post('/tps', [DriverController::class, 'tpsStore']);
+        Route::put('/tps/{id}', [DriverController::class, 'tpsUpdate']);
+        Route::delete('/tps/{id}', [DriverController::class, 'tpsDestroy']);
         Route::put('/password', [DriverController::class, 'updatePassword']);
         Route::post('/photo', [DriverController::class, 'updatePhoto']);
     });

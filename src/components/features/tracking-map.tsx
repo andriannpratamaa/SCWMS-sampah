@@ -88,9 +88,13 @@ export function TrackingMap({ armada = [], loading, fullscreen, center = default
       armada.forEach((a) => {
         if (a.latitude == null || a.longitude == null || isNaN(a.latitude) || isNaN(a.longitude)) return
 
+        const isOnline = a.is_online
+        const bgColor = isOnline ? '#16A34A' : '#9CA3AF'
+        const statusText = isOnline ? 'Online' : 'Offline'
+
         const marker = L.marker([a.latitude, a.longitude], {
           icon: L.divIcon({
-            html: '<div style="background:#16A34A;color:white;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);font-size:16px;">🚛</div>',
+            html: `<div style="background:${bgColor};color:white;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);font-size:16px;">🚛</div>`,
             iconSize: [36, 36],
             iconAnchor: [18, 18],
             className: '',
@@ -105,6 +109,7 @@ export function TrackingMap({ armada = [], loading, fullscreen, center = default
             <p style="margin:2px 0;font-size:13px;color:#555">📦 ${a.volume_sampah} m³</p>
             <p style="margin:2px 0;font-size:13px;color:#555">🕐 ${a.update_terakhir}</p>
             <p style="margin:2px 0;font-size:13px;color:#555">📍 ${a.latitude}, ${a.longitude}</p>
+            <p style="margin:2px 0;font-size:13px;color:${bgColor};font-weight:600">● ${statusText}</p>
           </div>
         `)
 
