@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import { Camera, Save, Lock } from 'lucide-react'
+import { compressImage } from '@/lib/utils'
 import { authService } from '@/services/auth'
 import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
@@ -64,9 +65,15 @@ export default function ProfilePage() {
     onError: () => toast.error('Gagal mengubah password. Periksa password lama Anda'),
   })
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) updatePhotoMutation.mutate(file)
+    if (!file) return
+    try {
+      const compressed = await compressImage(file, 2048)
+      updatePhotoMutation.mutate(compressed)
+    } catch {
+      toast.error('Gagal memproses foto')
+    }
   }
 
   const onSubmitPassword = async (values: PasswordForm) => {

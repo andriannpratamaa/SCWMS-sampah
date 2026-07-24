@@ -41,6 +41,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { compressImage } from '@/lib/utils'
 
 type Status = 'terangkut' | 'tidak_terangkut'
 
@@ -188,13 +189,19 @@ export default function DriverMonitoringPage() {
     )
   }
 
-  const handleFoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    setFotoFile(file)
-    const reader = new FileReader()
-    reader.onload = (ev) => setFotoPreview(ev.target?.result as string)
-    reader.readAsDataURL(file)
+    try {
+      const compressed = await compressImage(file)
+      setFotoFile(compressed)
+      const reader = new FileReader()
+      reader.onload = (ev) => setFotoPreview(ev.target?.result as string)
+      reader.readAsDataURL(compressed)
+    } catch {
+      toast.error('Gagal memproses foto.')
+      return
+    }
     if (!latitude && !gpsLoading) {
       getLocation()
     }

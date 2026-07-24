@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var errorText: TextView
 
     companion object {
-        private const val APP_URL = "http://192.168.0.88:3000/login"
+        private const val APP_URL = "http://10.207.65.176:3000/login"
         private const val PERMISSION_REQUEST_CODE = 100
         private const val FILE_CHOOSER_REQUEST_CODE = 101
     }

@@ -22,7 +22,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
-import { getPhotoUrl } from '@/lib/utils'
+import { getPhotoUrl, compressImage } from '@/lib/utils'
 
 const passwordSchema = z.object({
   password_lama: z.string().min(1, 'Password lama harus diisi'),
@@ -71,9 +71,15 @@ export default function DriverProfilPage() {
     onError: () => toast.error('Gagal mengubah password. Periksa password lama Anda'),
   })
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) updatePhotoMutation.mutate(file)
+    if (!file) return
+    try {
+      const compressed = await compressImage(file, 2048)
+      updatePhotoMutation.mutate(compressed)
+    } catch {
+      toast.error('Gagal memproses foto')
+    }
   }
 
   const onSubmitPassword = async (values: PasswordForm) => {
